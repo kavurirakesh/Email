@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Invitation</title>
+  <title>Parveen, will you come to me for your birthday?</title>
 
   <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -11,10 +11,17 @@
   <style>
     :root {
       --bg1: #ffd6e7;
-      --bg2: #ffeef6;
-      --card: #ffffffcc;
+      --bg2: #fff1f7;
+      --card: rgba(255,255,255,.78);
+      --stroke: rgba(0,0,0,.06);
+      --text: #111827;
+      --muted: rgba(17,24,39,.65);
+
       --yes: #ff3b7a;
       --yesHover: #ff1f68;
+
+      --no: #eef2f7;
+      --noText: #111827;
     }
 
     * { box-sizing: border-box; }
@@ -24,10 +31,48 @@
       min-height: 100svh;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
-      font-family: system-ui, sans-serif;
+      background:
+        radial-gradient(900px 600px at 20% 10%, #ffffff88, transparent 60%),
+        radial-gradient(700px 500px at 80% 30%, #ffffff66, transparent 55%),
+        radial-gradient(circle at top, var(--bg2), var(--bg1));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       overflow: hidden;
       padding: 16px;
+      color: var(--text);
+    }
+
+    /* floating hearts in the background */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .55;
+      filter: blur(.2px);
+    }
+    .heart {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      transform: rotate(45deg);
+      animation: floatUp linear infinite;
+      background: rgba(255, 59, 122, 0.25);
+      border-radius: 3px;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: inherit;
+    }
+    .heart::before { left: -7px; top: 0; }
+    .heart::after { left: 0; top: -7px; }
+
+    @keyframes floatUp {
+      from { transform: translateY(20px) rotate(45deg); }
+      to   { transform: translateY(-110vh) rotate(45deg); }
     }
 
     /* FULL-SCREEN CONFETTI CANVAS */
@@ -41,32 +86,63 @@
     }
 
     .card {
-      width: min(720px, 92vw);
-      padding: 26px 22px;
+      width: min(760px, 94vw);
+      padding: 26px 22px 22px;
       background: var(--card);
-      backdrop-filter: blur(10px);
-      border-radius: 22px;
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
       text-align: center;
-      box-shadow: 0 18px 60px rgba(0,0,0,.15);
+      border: 1px solid var(--stroke);
+      box-shadow: 0 18px 60px rgba(0,0,0,.14);
+      position: relative;
     }
 
-    .art {
-      width: min(260px, 80vw);
-      margin: 0 auto 10px;
-      display: block;
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+    .top {
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid var(--stroke);
+      font-weight: 700;
+      color: rgba(17,24,39,.8);
+      font-size: 13px;
     }
 
     h1 {
-      font-size: clamp(26px, 4vw, 44px);
-      margin: 12px 0 18px;
+      font-size: clamp(26px, 4vw, 46px);
+      margin: 6px 0 8px;
+      letter-spacing: -0.02em;
+      line-height: 1.06;
+    }
+
+    .sub {
+      margin: 0 auto 16px;
+      max-width: 52ch;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .art {
+      width: min(330px, 88vw);
+      margin: 0 auto 8px;
+      display: block;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,.12));
     }
 
     .button-zone {
       position: relative;
-      width: min(520px, 92%);
-      height: 150px;
-      margin: 0 auto;
+      width: min(560px, 92%);
+      height: 160px;
+      margin: 10px auto 0;
       touch-action: none;
     }
 
@@ -74,35 +150,36 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      padding: 16px 24px;
+      padding: 16px 26px;
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 850;
       border-radius: 999px;
       border: none;
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(0,0,0,.14);
       user-select: none;
       -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, background .12s ease;
+      transition: transform .12s ease, background .12s ease, filter .12s ease;
+      outline: none;
     }
 
     #yesBtn {
-      left: 18%;
+      left: 16%;
       background: var(--yes);
       color: #fff;
     }
-    #yesBtn:hover { background: var(--yesHover); }
+    #yesBtn:hover { background: var(--yesHover); filter: brightness(1.02); }
 
     #noBtn {
       left: 62%;
-      background: #e5e7eb;
-      color: #111827;
+      background: var(--no);
+      color: var(--noText);
     }
 
     .hint {
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 13px;
-      opacity: .7;
+      color: var(--muted);
     }
 
     .result {
@@ -112,19 +189,47 @@
     }
 
     .result h2 {
-      font-size: clamp(30px, 4.5vw, 46px);
-      margin: 10px 0;
+      font-size: clamp(28px, 4.5vw, 46px);
+      margin: 6px 0 8px;
+      letter-spacing: -0.02em;
     }
 
-    .fireworks {
-      width: min(380px, 90vw);
-      margin: 0 auto;
-      display: block;
+    .result p {
+      margin: 0 auto 14px;
+      max-width: 54ch;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--stroke);
+      font-weight: 700;
+      color: rgba(17,24,39,.85);
+    }
+
+    .mini {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
     }
 
     @keyframes pop {
-      from { transform: scale(.96); opacity: 0; }
+      from { transform: scale(.97); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
+    }
+
+    /* small screens spacing */
+    @media (max-width: 420px) {
+      .button-zone { height: 170px; }
+      button { padding: 15px 22px; font-size: 17px; }
+      #yesBtn { left: 10%; }
+      #noBtn { left: 58%; }
     }
   </style>
 </head>
@@ -132,62 +237,105 @@
 <body>
   <canvas id="confettiCanvas"></canvas>
 
+  <!-- background hearts -->
+  <div class="hearts" aria-hidden="true">
+    <div class="heart" style="left:10%; top:110%; animation-duration: 11s; animation-delay: 0s;"></div>
+    <div class="heart" style="left:22%; top:115%; animation-duration: 13s; animation-delay: 1s;"></div>
+    <div class="heart" style="left:38%; top:120%; animation-duration: 10s; animation-delay: 2s;"></div>
+    <div class="heart" style="left:55%; top:112%; animation-duration: 12s; animation-delay: 0.5s;"></div>
+    <div class="heart" style="left:70%; top:118%; animation-duration: 14s; animation-delay: 1.5s;"></div>
+    <div class="heart" style="left:86%; top:122%; animation-duration: 9s;  animation-delay: 2.3s;"></div>
+  </div>
+
   <main class="card">
-    <!-- ANIMAL WITH HEART -->
-    <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="fur" x1="0" x2="1">
-          <stop offset="0" stop-color="#f7c7a1"/>
-          <stop offset="1" stop-color="#f2a97b"/>
-        </linearGradient>
-        <linearGradient id="heart" x1="0" x2="1">
-          <stop offset="0" stop-color="#ff4d7d"/>
-          <stop offset="1" stop-color="#ff1f68"/>
-        </linearGradient>
-      </defs>
+    <div class="top">
+      <div class="badge">🎂 Birthday mission</div>
 
-      <path d="M250 50 C250 33 270 25 282 38
-               C294 25 314 33 314 50
-               C314 78 282 92 282 106
-               C282 92 250 78 250 50Z"
-            fill="url(#heart)"/>
+      <!-- Cute cupcake + heart balloon (no photos) -->
+      <svg class="art" viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cute cupcake with heart balloon">
+        <defs>
+          <linearGradient id="gPink" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff77a8"/>
+            <stop offset="1" stop-color="#ff2f74"/>
+          </linearGradient>
+          <linearGradient id="gFrost" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff7fb"/>
+            <stop offset="1" stop-color="#ffe3ef"/>
+          </linearGradient>
+          <linearGradient id="gCake" x1="0" x2="1">
+            <stop offset="0" stop-color="#f7c7a1"/>
+            <stop offset="1" stop-color="#f2a97b"/>
+          </linearGradient>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity=".12"/>
+          </filter>
+        </defs>
 
-      <path d="M90 120 C90 70 140 40 190 60
-               C240 40 290 70 290 120
-               C290 180 240 210 190 210
-               C140 210 90 180 90 120Z"
-            fill="url(#fur)"/>
+        <!-- heart balloon -->
+        <path d="M395 42 C395 26 414 18 425 30
+                 C436 18 455 26 455 42
+                 C455 66 425 79 425 96
+                 C425 79 395 66 395 42Z"
+              fill="url(#gPink)" filter="url(#soft)"/>
+        <path d="M425 96 C418 125 390 155 360 175" stroke="#ff4d87" stroke-width="4" fill="none" stroke-linecap="round"/>
 
-      <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b"/>
-      <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b"/>
+        <!-- cupcake base -->
+        <path d="M155 250 C165 188 355 188 365 250
+                 C370 282 340 295 260 295
+                 C180 295 150 282 155 250Z"
+              fill="url(#gCake)" filter="url(#soft)"/>
+        <!-- wrapper lines -->
+        <path d="M178 250 L190 292 M214 244 L222 294 M252 242 L252 295 M288 244 L280 294 M324 250 L312 292"
+              stroke="rgba(255,255,255,.55)" stroke-width="6" stroke-linecap="round"/>
 
-      <circle cx="160" cy="130" r="8"/>
-      <circle cx="220" cy="130" r="8"/>
+        <!-- frosting -->
+        <path d="M170 205 C170 165 215 145 250 160
+                 C270 135 325 145 325 185
+                 C350 190 358 225 336 238
+                 C330 265 190 275 184 238
+                 C155 230 150 206 170 205Z"
+              fill="url(#gFrost)" filter="url(#soft)"/>
 
-      <path d="M190 144 C186 144 182 148 182 152
-               C182 160 190 164 190 170
-               C190 164 198 160 198 152
-               C198 148 194 144 190 144Z"
-            fill="#ff7aa2"/>
-    </svg>
+        <!-- sprinkles -->
+        <circle cx="215" cy="198" r="6" fill="#ff3b7a"/>
+        <circle cx="260" cy="186" r="6" fill="#7c3aed" opacity=".8"/>
+        <circle cx="300" cy="205" r="6" fill="#22c55e" opacity=".75"/>
+        <circle cx="240" cy="225" r="6" fill="#f59e0b" opacity=".85"/>
+        <circle cx="292" cy="232" r="6" fill="#06b6d4" opacity=".8"/>
 
-    <h1>Parveen, will you please come to me for your birthday this year?</h1>
+        <!-- candle -->
+        <rect x="252" y="112" width="16" height="58" rx="8" fill="#ff4d87"/>
+        <path d="M260 92 C248 108 254 116 260 122
+                 C266 116 272 108 260 92Z"
+              fill="#f59e0b" filter="url(#soft)"/>
+
+        <!-- tiny face on frosting -->
+        <circle cx="238" cy="205" r="6" fill="#111827"/>
+        <circle cx="288" cy="205" r="6" fill="#111827"/>
+        <path d="M262 214 C255 214 250 220 250 226
+                 C250 236 262 242 262 250
+                 C262 242 274 236 274 226
+                 C274 220 269 214 262 214Z"
+              fill="#ff77a8"/>
+      </svg>
+
+      <h1>Parveen, will you come to me for your birthday this year?</h1>
+      <p class="sub">I’ll plan everything. You just need to say yes 🙂</p>
+    </div>
 
     <section class="button-zone" id="zone">
       <button id="yesBtn">Yes</button>
       <button id="noBtn">No</button>
     </section>
 
-    <!-- HINT -->
-    <div class="hint" id="hint">“No” seems a bit shy 😈</div>
+    <div class="hint" id="hint">The “No” button is feeling shy</div>
 
     <section class="result" id="result">
       <h2>YAY! 🎉</h2>
-      <img
-        class="fireworks"
-        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
-        alt="Fireworks"
-      />
+      <p>Okay, it’s official. I’m celebrating your birthday with you 💗</p>
+
+      <div class="cta">Next step: Feb 13 is locked, Travel Safe ✈️💗</div>
+      <div class="mini">I can’t wait to see you 💗</div>
     </section>
   </main>
 
@@ -234,19 +382,19 @@
 
       setTimeout(() => {
         confettiInstance({
-          particleCount: 300,
+          particleCount: 280,
           spread: 140,
           startVelocity: 60,
           ticks: 220,
           origin: { x: 0.5, y: 0.55 }
         });
-      }, 300);
+      }, 280);
     }
 
     /* ---------- YES BUTTON GROWS ---------- */
     let yesScale = 1;
     function growYes() {
-      yesScale = Math.min(2.2, yesScale + 0.1);
+      yesScale = Math.min(2.25, yesScale + 0.11);
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
@@ -265,8 +413,8 @@
       dx /= mag;
       dy /= mag;
 
-      let newLeft = (b.left - z.left) + dx * 150;
-      let newTop  = (b.top - z.top) + dy * 150;
+      let newLeft = (b.left - z.left) + dx * 160;
+      let newTop  = (b.top - z.top) + dy * 160;
 
       newLeft = clamp(newLeft, 0, z.width - b.width);
       newTop  = clamp(newTop, 0, z.height - b.height);
@@ -284,7 +432,7 @@
         (b.left + b.width / 2) - e.clientX,
         (b.top + b.height / 2) - e.clientY
       );
-      if (d < 140) moveNo(e.clientX, e.clientY);
+      if (d < 150) moveNo(e.clientX, e.clientY);
     });
 
     noBtn.addEventListener("click", e => e.preventDefault());
@@ -292,7 +440,7 @@
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
       zone.style.display = "none";
-      hint.style.display = "none";     // HIDE THE HINT
+      hint.style.display = "none";
       result.style.display = "block";
       resizeConfettiCanvas();
       fullScreenConfetti();
